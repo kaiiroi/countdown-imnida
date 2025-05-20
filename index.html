@@ -47,7 +47,7 @@
     }
     .message-content {
       max-width: 600px;
-      margin: 100px auto 0 auto; /* push text below music player */
+      margin: 100px auto 0 auto;
       font-size: 1.1rem;
       color: #333;
       line-height: 1.6;
@@ -123,6 +123,17 @@
     audio {
       display: none;
     }
+
+    canvas#confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 2;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -133,6 +144,8 @@
   </div>
 
   <div class="message-page" id="message-page">
+    <canvas id="confetti-canvas"></canvas>
+
     <!-- Spotify-style Music Player -->
     <div class="music-player">
       <img src="https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228" alt="Song Cover">
@@ -178,9 +191,11 @@
     function showMessage() {
       countdownPage.style.display = 'none';
       messagePage.style.display = 'block';
+      document.getElementById('confetti-canvas').style.display = 'block';
       typeMessage();
       releaseHearts();
       document.getElementById("audio-player").play();
+      startConfetti();
     }
 
     const message = `I never thought I’d write this down, let alone say it out loud. But the truth has been sitting heavy on my chest for far too long...
@@ -235,62 +250,52 @@
         audioPlayer.pause();
         toggleBtn.textContent = '▶️';
       }
+    });
 
     // Confetti
-      <canvas id="confetti-canvas"></canvas>
-<script>
-  const confettiCanvas = document.getElementById("confetti-canvas");
-  const ctx = confettiCanvas.getContext("2d");
-  confettiCanvas.style.position = "fixed";
-  confettiCanvas.style.top = "0";
-  confettiCanvas.style.left = "0";
-  confettiCanvas.style.width = "100vw";
-  confettiCanvas.style.height = "100vh";
-  confettiCanvas.style.pointerEvents = "none";
-  confettiCanvas.style.zIndex = "2";
+    function startConfetti() {
+      const confettiCanvas = document.getElementById("confetti-canvas");
+      const ctx = confettiCanvas.getContext("2d");
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
 
-  confettiCanvas.width = window.innerWidth;
-  confettiCanvas.height = window.innerHeight;
+      const confettiParticles = [];
 
-  const confettiParticles = [];
-
-  function createConfetti() {
-    const colors = ["#fcd5ce", "#f8edeb", "#e8a598", "#ffc8dd", "#ffafcc"];
-    for (let i = 0; i < 100; i++) {
-      confettiParticles.push({
-        x: Math.random() * confettiCanvas.width,
-        y: Math.random() * confettiCanvas.height - confettiCanvas.height,
-        r: Math.random() * 6 + 4,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        speedY: Math.random() * 2 + 1,
-        drift: Math.random() * 2 - 1
-      });
-    }
-  }
-
-  function drawConfetti() {
-    ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-    confettiParticles.forEach((p) => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.fill();
-      p.y += p.speedY;
-      p.x += p.drift;
-
-      if (p.y > confettiCanvas.height) {
-        p.y = -10;
-        p.x = Math.random() * confettiCanvas.width;
+      function createConfetti() {
+        const colors = ["#fcd5ce", "#f8edeb", "#e8a598", "#ffc8dd", "#ffafcc"];
+        for (let i = 0; i < 100; i++) {
+          confettiParticles.push({
+            x: Math.random() * confettiCanvas.width,
+            y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+            r: Math.random() * 6 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            speedY: Math.random() * 2 + 1,
+            drift: Math.random() * 2 - 1
+          });
+        }
       }
-    });
-    requestAnimationFrame(drawConfetti);
-  }
 
-  createConfetti();
-  drawConfetti();
-</script>
+      function drawConfetti() {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        confettiParticles.forEach((p) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          p.y += p.speedY;
+          p.x += p.drift;
 
-    });
+          if (p.y > confettiCanvas.height) {
+            p.y = -10;
+            p.x = Math.random() * confettiCanvas.width;
+          }
+        });
+        requestAnimationFrame(drawConfetti);
+      }
+
+      createConfetti();
+      drawConfetti();
+    }
   </script>
 </body>
 </html>
