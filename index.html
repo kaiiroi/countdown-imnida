@@ -47,7 +47,7 @@
     }
     .message-content {
       max-width: 600px;
-      margin: 0 auto;
+      margin: 100px auto 0 auto; /* push text below music player */
       font-size: 1.1rem;
       color: #333;
       line-height: 1.6;
@@ -86,7 +86,6 @@
       100% { transform: translateY(-200px) rotate(45deg); opacity: 0; }
     }
 
-    /* Spotify-style player */
     .music-player {
       position: fixed;
       top: 20px;
@@ -124,62 +123,6 @@
     audio {
       display: none;
     }
-
-    /* Floating birthday cake */
-    .birthday-cake {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80px;
-      height: auto;
-      animation: floatcake 3s ease-in-out infinite;
-      z-index: 4;
-    }
-
-    @keyframes floatcake {
-      0%, 100% {
-        transform: translateX(-50%) translateY(0);
-      }
-      50% {
-        transform: translateX(-50%) translateY(-15px);
-      }
-    }
-
-    /* Side hearts */
-    .side-heart {
-      position: fixed;
-      width: 20px;
-      height: 20px;
-      background: pink;
-      transform: rotate(45deg);
-      z-index: 3;
-    }
-    .side-heart::before,
-    .side-heart::after {
-      content: "";
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: pink;
-      border-radius: 50%;
-    }
-    .side-heart::before {
-      top: -10px;
-      left: 0;
-    }
-    .side-heart::after {
-      top: 0;
-      left: -10px;
-    }
-    .left-heart {
-      left: 20px;
-      top: 100px;
-    }
-    .right-heart {
-      right: 20px;
-      top: 200px;
-    }
   </style>
 </head>
 <body>
@@ -197,16 +140,12 @@
         <div class="track-title">Beautiful in White</div>
         <div class="track-artist">Shane Filan</div>
       </div>
+      <button id="toggle-music" style="background: none; border: none; cursor: pointer; font-size: 1.2rem;">⏸</button>
       <audio id="audio-player" autoplay loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
       </audio>
     </div>
-
-    <!-- Floating Cake & Fixed Hearts -->
-    <img class="birthday-cake" src="https://cdn-icons-png.flaticon.com/512/824/824231.png" alt="Cake" />
-    <div class="side-heart left-heart"></div>
-    <div class="side-heart right-heart"></div>
 
     <div class="message-content" id="typed-text"></div>
   </div>
@@ -244,19 +183,9 @@
       document.getElementById("audio-player").play();
     }
 
-    const message = `I never thought I’d write this down, let alone say it out loud. But the truth has been sitting heavy on my chest for far too long, and maybe—just maybe—putting it into words will finally set me free.
+    const message = `I never thought I’d write this down, let alone say it out loud. But the truth has been sitting heavy on my chest for far too long...
 
-I have a confession.
-
-I’ve been pretending. Pretending that I’m okay, that everything is fine, that nothing affects me. I laugh at the right times, I nod when I’m supposed to, and I even throw in a joke or two to keep people from asking what’s really going on. But behind that smile is a storm I haven’t dared to share.
-
-The truth is, I’m tired. Not just physically, but emotionally. I carry the weight of expectations, memories, regrets—and worst of all, silence. I’ve pushed people away because I was too scared they’d see through the act. Too scared they’d see the real me. But what scares me more now is the thought of going on like this—unseen, unheard, and misunderstood.
-
-This is not a cry for help. This is not an excuse. This is a confession—a moment of honesty in a world where we’re taught to hide our cracks. So here it is: I’m not perfect. I mess up. I feel lost. I overthink. I care too much sometimes. And yes, I’ve been afraid to admit any of it.
-
-But not anymore.
-
-Maybe this essay won’t change anything. Maybe it’ll just be a piece of paper in someone’s hands, tossed aside after a scene or two. But for me, writing it is a first step. A small crack in the mask. And sometimes, that’s all it takes to let a little light in.`;
+(You may continue or replace this message as needed.)`;
 
     let charIndex = 0;
     function typeMessage() {
@@ -293,6 +222,20 @@ Maybe this essay won’t change anything. Maybe it’ll just be a piece of paper
     testBtn.style.cursor = 'pointer';
     testBtn.onclick = showMessage;
     document.body.appendChild(testBtn);
+
+    // Pause/Play Toggle
+    const toggleBtn = document.getElementById('toggle-music');
+    const audioPlayer = document.getElementById('audio-player');
+
+    toggleBtn.addEventListener('click', () => {
+      if (audioPlayer.paused) {
+        audioPlayer.play();
+        toggleBtn.textContent = '⏸';
+      } else {
+        audioPlayer.pause();
+        toggleBtn.textContent = '▶️';
+      }
+    });
   </script>
 </body>
 </html>
